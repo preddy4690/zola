@@ -7,9 +7,19 @@ import {
 import { cn } from "@/lib/utils"
 import type { Message as MessageAISDK } from "@ai-sdk/react"
 import { ArrowClockwise, Check, Copy } from "@phosphor-icons/react"
+import dynamic from "next/dynamic"
+import React, { Suspense } from "react"
 import { getSources } from "./get-sources"
 import { SourcesList } from "./sources-list"
-import { ToolInvocation } from "./tool-invocation"
+
+// Dynamically import the ToolInvocation component with SSR disabled
+const DynamicToolInvocation = dynamic(
+  () => import("./tool-invocation").then((mod) => mod.ToolInvocation),
+  {
+    ssr: false,
+    loading: () => <div className="tool-invocation-placeholder min-h-[50px]"></div>
+  }
+)
 
 type MessageAssistantProps = {
   children: string
@@ -47,7 +57,11 @@ export function MessageAssistant({
     >
       <div className={cn("flex min-w-full flex-col gap-2", isLast && "pb-8")}>
         {toolInvocationParts && toolInvocationParts.length > 0 && (
-          <ToolInvocation data={toolInvocationParts} />
+          <div className="tool-invocation-container mb-4">
+            <Suspense fallback={<div className="tool-invocation-placeholder min-h-[50px]"></div>}>
+              <DynamicToolInvocation data={toolInvocationParts} />
+            </Suspense>
+          </div>
         )}
 
         {contentNullOrEmpty ? null : (

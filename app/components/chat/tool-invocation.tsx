@@ -7,7 +7,7 @@ import type {
 } from "@ai-sdk/ui-utils"
 import { CaretDown, Code, Link, Nut, Spinner } from "@phosphor-icons/react"
 import { AnimatePresence, motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState, memo } from "react"
 
 type CustomToolInvocation =
   | BaseToolInvocation
@@ -49,7 +49,7 @@ const TRANSITION = {
   bounce: 0,
 }
 
-export function ToolInvocation({
+const ToolInvocationComponent = memo(function ToolInvocation({
   data,
   defaultOpen = false,
 }: ToolInvocationProps) {
@@ -143,9 +143,9 @@ export function ToolInvocation({
       </div>
     </div>
   )
-}
+})
 
-function SingleToolView({
+const SingleToolView = memo(function SingleToolView({
   data,
   defaultOpen = false,
   className,
@@ -433,4 +433,6 @@ function SingleToolView({
       </AnimatePresence>
     </div>
   )
-}
+})
+
+export { ToolInvocationComponent as ToolInvocation }
