@@ -3,6 +3,7 @@ import { AgentSummary } from "@/app/types/agent"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
 import { User } from "@phosphor-icons/react"
+import { forwardRef } from "react"
 
 type AgentCardProps = {
   id: string
@@ -15,24 +16,34 @@ type AgentCardProps = {
   onClick?: () => void
 }
 
-export function AgentCard({
-  name,
-  description,
-  creator_id,
-  avatar_url,
-  className,
-  isAvailable,
-  onClick,
-}: AgentCardProps) {
+export const AgentCard = forwardRef<HTMLButtonElement, AgentCardProps>(
+  function AgentCard(
+    {
+      name,
+      description,
+      creator_id,
+      avatar_url,
+      className,
+      isAvailable,
+      onClick,
+    },
+    ref
+  ) {
   return (
     <button
+      ref={ref}
       className={cn(
         "bg-secondary hover:bg-accent cursor-pointer rounded-xl p-4 transition-colors",
         className,
         !isAvailable && "cursor-not-allowed opacity-50"
       )}
       type="button"
-      onClick={() => isAvailable && onClick?.()}
+      onClick={(e) => {
+        if (isAvailable && onClick) {
+          e.preventDefault();
+          onClick();
+        }
+      }}
     >
       <div className="flex items-center space-x-4">
         <div className="flex-shrink-0">
@@ -69,4 +80,4 @@ export function AgentCard({
       </div>
     </button>
   )
-}
+})

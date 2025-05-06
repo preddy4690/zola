@@ -2,14 +2,22 @@ import { AgentDetail } from "@/app/components/agents/agent-detail"
 import { LayoutApp } from "@/app/components/layout/layout-app"
 import { MessagesProvider } from "@/lib/chat-store/messages/provider"
 import { createClient } from "@/lib/supabase/server"
+import { notFound } from "next/navigation"
 
 export default async function AgentIdPage({
   params,
 }: {
   params: Promise<{ agentSlug: string | string[] }>
-}) {
+}): Promise<JSX.Element> {
   const { agentSlug: slugParts } = await params
   const agentSlug = Array.isArray(slugParts) ? slugParts.join("/") : slugParts
+
+  // Check if the slug looks like a static file (has a file extension)
+  if (agentSlug.includes('.')) {
+    // This is a static file request, not an agent slug
+    // Return 404 without querying the database
+    notFound()
+  }
 
   const supabase = await createClient()
 
@@ -17,10 +25,14 @@ export default async function AgentIdPage({
     .from("agents")
     .select("*")
     .eq("slug", agentSlug)
-    .single()
+    .maybeSingle()
 
   if (error) {
     throw new Error(error.message)
+  }
+
+  if (!agent) {
+    notFound()
   }
 
   const { data: agents, error: agentsError } = await supabase
