@@ -86,8 +86,8 @@ export function SourcesList({ sources, className }: SourcesListProps) {
               className="overflow-hidden"
             >
               <ul className="space-y-2 px-3 pt-3 pb-3">
-                {sources.map((source) => (
-                  <li key={source.id} className="flex items-center text-sm">
+                {sources.map((source, index) => (
+                  <li key={`${source.url}-${index}`} className="flex items-center text-sm">
                     <div className="min-w-0 flex-1 overflow-hidden">
                       <a
                         href={addUTM(source.url)}
