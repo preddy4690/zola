@@ -46,6 +46,7 @@ const INITIAL_COMPONENTS: Partial<Components> = {
     }
 
     const language = extractLanguage(className)
+    const codeContent = children ? String(children) : ""
 
     return (
       <CodeBlock className={className}>
@@ -56,10 +57,10 @@ const INITIAL_COMPONENTS: Partial<Components> = {
         </CodeBlockGroup>
         <div className="sticky top-16 lg:top-0">
           <div className="absolute right-0 bottom-0 flex h-9 items-center pr-1.5">
-            <ButtonCopy code={children as string} />
+            <ButtonCopy code={codeContent} />
           </div>
         </div>
-        <CodeBlockCode code={children as string} language={language} />
+        <CodeBlockCode code={codeContent} language={language} />
       </CodeBlock>
     )
   },
