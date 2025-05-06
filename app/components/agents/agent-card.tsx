@@ -1,8 +1,5 @@
-import { useUser } from "@/app/providers/user-provider"
-import { AgentSummary } from "@/app/types/agent"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
-import { User } from "@phosphor-icons/react"
 
 type AgentCardProps = {
   id: string
@@ -12,7 +9,7 @@ type AgentCardProps = {
   creator_id?: string
   className?: string
   isAvailable: boolean
-  onClick?: () => void
+  onClick?: (e?: React.MouseEvent) => void
 }
 
 export function AgentCard({
@@ -35,9 +32,9 @@ export function AgentCard({
       onClick={(e) => {
         e.preventDefault()
 
-        if (!isAvailable) return
+        if (!isAvailable || !onClick) return
 
-        onClick?.()
+        onClick(e)
       }}
     >
       <div className="flex items-center space-x-4">

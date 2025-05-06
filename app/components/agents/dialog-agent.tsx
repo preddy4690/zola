@@ -1,7 +1,7 @@
 import { useBreakpoint } from "@/app/hooks/use-breakpoint"
 import { useUser } from "@/app/providers/user-provider"
 import { AgentSummary } from "@/app/types/agent"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer"
 import { Popover, PopoverTrigger } from "@/components/ui/popover"
 import { PopoverContentAuth } from "../chat-input/popover-content-auth"
@@ -62,7 +62,10 @@ export function DialogAgent({
       avatar_url={avatar_url}
       className={className}
       isAvailable={isAvailable}
-      onClick={() => handleOpenChange(true)}
+      onClick={(e) => {
+        if (e) e.preventDefault();
+        handleOpenChange(true);
+      }}
     />
   )
 
@@ -79,6 +82,9 @@ export function DialogAgent({
               avatar_url={avatar_url}
               className={className}
               isAvailable={isAvailable}
+              onClick={(e) => {
+                if (e) e.preventDefault();
+              }}
             />
           )}
         </PopoverTrigger>
@@ -120,6 +126,7 @@ export function DialogAgent({
         className="[&>button:last-child]:bg-background max-w-[600px] gap-0 overflow-hidden rounded-3xl p-0 shadow-xs [&>button:last-child]:rounded-full [&>button:last-child]:p-1"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
+        <DialogTitle className="sr-only">{name} Agent</DialogTitle>
         {renderContent()}
       </DialogContent>
     </Dialog>
